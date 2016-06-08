@@ -9,12 +9,35 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
 } from 'react-native';
 
+import SplashScreen from './SplashScreen';
+
 class ZhihuDailyRN extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+        splashed: false,
+    };
+  }
+
+  componentDidMount() {
+    this.timer = setTimeout(
+      () => {
+        this.setState({splashed: true});
+      },
+      2000,
+    );
+  }
+
+  componentWillUnmount() {
+    this.timer && clearTimeout(this.timer);
+  }
+
   render() {
-    return (
+    return this.state.splashed ? (
       <View style={styles.container}>
         <Text style={styles.welcome}>
           Welcome to React Native!
@@ -26,7 +49,7 @@ class ZhihuDailyRN extends Component {
           Shake or press menu button for dev menu
         </Text>
       </View>
-    );
+    ) : (<SplashScreen />);
   }
 }
 
