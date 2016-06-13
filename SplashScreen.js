@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     marginTop: WINDOW_HEIGHT - 50,
+    backgroundColor: 'transparent',
   },
 });
 
