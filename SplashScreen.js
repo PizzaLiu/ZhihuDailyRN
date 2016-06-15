@@ -33,6 +33,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: WINDOW_HEIGHT - 50,
     backgroundColor: 'transparent',
+    textShadowColor: '#333',
+    textShadowOffset: {
+      height: 2,
+      width: 2
+    },
+    textShadowRadius: 10,
   },
 });
 
