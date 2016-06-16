@@ -65,7 +65,6 @@ class SplashScreen extends React.Component {
               source: {uri: result.img},
               text: result.text
             };
-            console.log(startImage);
             this.setState({startImage: startImage});
           }
         })
