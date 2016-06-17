@@ -35,10 +35,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     textShadowColor: '#333',
     textShadowOffset: {
-      height: 2,
-      width: 2
+      height: 1,
+      width: 1
     },
-    textShadowRadius: 10,
+    textShadowRadius: 2,
   },
 });
 
