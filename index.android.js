@@ -10,9 +10,12 @@ import {
   StyleSheet,
   Text,
   View,
+  ToastAndroid,
+  BackAndroid,
 } from 'react-native';
 
 import SplashScreen from './SplashScreen';
+import MainScreen from './MainScreen';
 
 class ZhihuDailyRN extends Component {
 
@@ -21,6 +24,10 @@ class ZhihuDailyRN extends Component {
     this.state = {
         splashed: false,
     };
+  }
+
+  componentWillMount() {
+    BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
   }
 
   componentDidMount() {
@@ -34,6 +41,7 @@ class ZhihuDailyRN extends Component {
 
   componentWillUnmount() {
     this.timer && clearTimeout(this.timer);
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
   }
 
   render() {
@@ -51,6 +59,16 @@ class ZhihuDailyRN extends Component {
       </View>
     ) : (<SplashScreen />);
   }
+
+  onBackAndroid = () => {
+      if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
+        return false;
+      }
+      this.lastBackPressed = Date.now();
+      ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+      return true;
+  };
+
 }
 
 const styles = StyleSheet.create({
