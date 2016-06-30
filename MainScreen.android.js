@@ -8,6 +8,7 @@ import {
   Image,
   Dimensions,
   Animated,
+  DrawerLayoutAndroid,
 } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -29,20 +30,36 @@ const styles = StyleSheet.create({
   },
 });
 
+var DRAWER_WIDTH = Dimensions.get('window').width - 60;
+
 export default class MainScreen extends Component {
     static propTypes = {
     };
 
+    _renderDrawerView() {
+      return (<Text style={styles.welcome}>
+                  Hello drawer!
+              </Text>
+              );
+    }
+
     render() {
         return (
+          <DrawerLayoutAndroid
+            drawerWidth = {DRAWER_WIDTH}
+            keyboardDismissMode = 'on-drag'
+            drawerPosition = {DrawerLayoutAndroid.positions.Left}
+            renderNavigationView = {this._renderDrawerView}
+          >
             <View style={styles.container}>
-                <Text style={styles.welcome}>
-                  Welcome to MainScreen!
-                </Text>
-                <Text style={styles.instructions}>
-                  This is MainScreen.
-                </Text>
-              </View>
+              <Text style={styles.welcome}>
+                Welcome to MainScreen!
+              </Text>
+              <Text style={styles.instructions}>
+                This is MainScreen.
+              </Text>
+            </View>
+          </DrawerLayoutAndroid>
         );
     }
 }
