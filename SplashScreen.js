@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   text: {
-    color: 'white',
+    color: '#c2ccd0',
     textAlign: 'center',
     marginTop: WINDOW_HEIGHT - 50,
     backgroundColor: 'transparent',
