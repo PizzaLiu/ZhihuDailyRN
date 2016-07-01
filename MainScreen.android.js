@@ -9,6 +9,7 @@ import {
   Dimensions,
   Animated,
   DrawerLayoutAndroid,
+  ToolbarAndroid,
 } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -28,13 +29,30 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
+  toolbar: {
+    backgroundColor: '#00a2ed',
+    height: 56,
+  }
 });
 
+var DRAWER_REF = 'drawer';
 var DRAWER_WIDTH = Dimensions.get('window').width - 60;
+var toolbar_actions = [
+  {title: '提醒', icon: require('./images/ic_message_white.png'), show: 'always'},
+  {title: '夜间模式', show: 'never'},
+  {title: '设置选项', show: 'never'},
+];
 
 export default class MainScreen extends Component {
     static propTypes = {
     };
+
+    constructor(props){
+        super(props);
+        this.state = {
+            toolbarTitle: '首页',
+        };
+    }
 
     _renderDrawerView() {
       return (<Text style={styles.welcome}>
@@ -43,14 +61,33 @@ export default class MainScreen extends Component {
               );
     }
 
+    _showDrawer = () => {
+      this.refs[DRAWER_REF].openDrawer();
+    }
+
+    _onActionSelected = () => {
+      // TODO
+    }
+
     render() {
         return (
           <DrawerLayoutAndroid
+            ref = {DRAWER_REF}
             drawerWidth = {DRAWER_WIDTH}
             keyboardDismissMode = 'on-drag'
             drawerPosition = {DrawerLayoutAndroid.positions.Left}
             renderNavigationView = {this._renderDrawerView}
           >
+            <ToolbarAndroid
+              navIcon = {require('./images/ic_menu_white.png')}
+              style = {styles.toolbar}
+              onIconClicked = {this._showDrawer}
+              title = {this.state.toolbarTitle}
+              titleColor = 'white'
+              actions = {toolbar_actions}
+              overflowIcon = {require('./images/ic_menu_moreoverflow.png')}
+              onActionSelected={this._onActionSelected}
+            />
             <View style={styles.container}>
               <Text style={styles.welcome}>
                 Welcome to MainScreen!
