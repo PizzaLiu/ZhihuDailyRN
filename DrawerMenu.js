@@ -48,10 +48,16 @@ const styles = {
     fontSize: 13,
     marginLeft: 5,
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  themeList: {
+    flex: 1,
+  },
+  themeItem: {
+    flexDirection: 'row',
+    padding: 8,
+    alignItems: 'center',
+  },
+  itemName: {
+    color: '#00a2ed',
   },
 };
 
@@ -81,7 +87,14 @@ export default class DrawerMenu extends Component {
               </TouchableNativeFeedback>
             </View>
           </View>
-        <Text style = {styles.welcome}>Hello drawer!</Text>
+        <View style={styles.themeList}>
+          <TouchableNativeFeedback>
+            <View style={styles.themeItem}>
+              <Image source={require('./images/ic_menu_home.png')} />
+              <Text style = {[styles.itemName, {marginLeft:10}]}>首页</Text>
+            </View>
+          </TouchableNativeFeedback>
+        </View>
       </View>
     );
   }
