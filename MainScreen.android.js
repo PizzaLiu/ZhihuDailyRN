@@ -12,6 +12,8 @@ import {
   ToolbarAndroid,
 } from 'react-native';
 
+import DrawerMenu from './DrawerMenu';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -55,10 +57,9 @@ export default class MainScreen extends Component {
     }
 
     _renderDrawerView() {
-      return (<Text style={styles.welcome}>
-                  Hello drawer!
-              </Text>
-              );
+      return (<DrawerMenu
+
+        />);
     }
 
     _showDrawer = () => {
