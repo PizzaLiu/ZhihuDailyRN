@@ -62,6 +62,10 @@ export default class MainScreen extends Component {
         />);
     }
 
+    componentDidMount() {
+      this.refs[DRAWER_REF].openDrawer();
+    }
+
     _showDrawer = () => {
       this.refs[DRAWER_REF].openDrawer();
     }
@@ -78,6 +82,7 @@ export default class MainScreen extends Component {
             keyboardDismissMode = 'on-drag'
             drawerPosition = {DrawerLayoutAndroid.positions.Left}
             renderNavigationView = {this._renderDrawerView}
+            //drawerLockMode = 'locked-open'
           >
             <ToolbarAndroid
               navIcon = {require('./images/ic_menu_white.png')}
