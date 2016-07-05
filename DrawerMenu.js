@@ -8,6 +8,7 @@ import {
   View,
   TouchableNativeFeedback,
   ListView,
+  TouchableOpacity,
 } from 'react-native'
 
 import ZhihuApi from './ZhihuApi';
@@ -64,22 +65,26 @@ const styles = {
     padding: 10,
     alignItems: 'center',
   },
-  itemName: {
-    color: '#00a2ed',
+  activeItem: {
+    backgroundColor: '#EDEDED',
   },
-  themeActIcon: {
+  itemName: {
+    marginLeft:10,
+    color: '#555',
+  },
+  themeIndicator: {
     position: 'absolute',
-    right: 20,
+    right: 50,
   },
 };
 
 export default class DrawerMenu extends Component {
   constructor(props){
       super(props);
-      var dataSource = new ListView.DataSource({
-        rowHasChanged: (row1, row2) => row1 !== row2,
-      });
+      var dataSource = new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2});
       this.state = {
+          themes: [],
+          themeSelectedTheme: null,
           isLoadingThemeList: true,
           themesDataSource: dataSource,
       };
@@ -91,20 +96,43 @@ export default class DrawerMenu extends Component {
 
   _setThemeList(themes) {
     if(themes) {
-      return this.setState({
-        isLoadingThemeList: false,
-        themesDataSource: this.state.themesDataSource.cloneWithRows(themes),
-      });
+      var subscribed_themes = [];
+      var unsubscribed_themes = [];
+      var new_themes = [];
+      zhihu_api.getSubscibeThemes().then((themes_subscribed_ids) => {
+        for(let i=0; i<themes.length; i++) {
+          themes[i].selected = false;
+          if(this.state.themeSelectedTheme && this.state.themeSelectedTheme.id === themes[i].id) {
+            themes[i].selected = true;
+          }
+          if(themes_subscribed_ids && themes_subscribed_ids.length && themes_subscribed_ids.indexOf(themes[i].id) !== -1) {
+            themes[i].subscribed = true;
+            subscribed_themes.push(themes[i]);
+          } else {
+            themes[i].subscribed = false;
+            unsubscribed_themes.push(themes[i]);
+          }
+        }
+        new_themes = subscribed_themes.concat(unsubscribed_themes);
+        return this.setState({
+          themes: new_themes,
+          isLoadingThemeList: false,
+          themesDataSource: this.state.themesDataSource.cloneWithRows(new_themes),
+        });
+      }).done();
+    } else {
       zhihu_api.getThemeListOffline().then((themes) => {
         if(!themes) throw new Error('cannot get themes in localstrage');
-        this.setState({
-          isLoadingThemeList: false,
-          themesDataSource: this.state.themesDataSource.cloneWithRows(themes),
-        });
+        this._setThemeList(themes);
       }).catch((err) => {
         console.error(err);
       }).done();
     }
+  }
+
+  subscribTheme(tid) {
+    zhihu_api.subscibeTheme(tid);
+    this._setThemeList();
   }
 
   fetchThemes() {
@@ -115,18 +143,33 @@ export default class DrawerMenu extends Component {
     }).done();
   }
 
-  renderThemeRow(theme, sectionID, rowID, highlightRow) {
+  _onThemeSelected = (theme) => {
+    this.setState({
+      themeSelectedTheme: theme,
+    });
+    this._setThemeList();
+    this.props.onThemeSelected(theme);
+  }
+
+  renderThemeRow = (theme, sectionID, rowID, highlightRow) => {
+    var indicator = theme.subscribed ? (
+          <Image style={styles.themeIndicator} source={require('./images/ic_menu_arrow.png')} />
+      ) : (
+          <TouchableOpacity onPress={() => this.subscribTheme(theme.id)} style={styles.themeIndicator}>
+            <Image source={require('./images/ic_menu_follow.png')} />
+          </TouchableOpacity>
+      );
     return (
-      <TouchableNativeFeedback>
-        <View style={styles.themeItem}>
-          <Text style={[styles.itemName, {marginLeft:10, color: '#333'}]}>{theme.name}</Text>
-          <Image style={styles.themeActIcon} source={require('./images/ic_menu_follow.png')} />
+      <TouchableNativeFeedback onPress={() => this._onThemeSelected(theme, rowID)}>
+        <View style={[styles.themeItem, theme.selected && styles.activeItem]}>
+          <Text style={styles.itemName}>{theme.name}</Text>
+          {indicator}
         </View>
       </TouchableNativeFeedback>
     );
   }
 
-  _renderHeaer() {
+  _renderHeaer = () => {
     return (
       <View style = {styles.container}>
         <View style={styles.topper}>
@@ -152,10 +195,10 @@ export default class DrawerMenu extends Component {
             </View>
           </View>
         <View style={styles.themeList}>
-          <TouchableNativeFeedback>
-            <View style={styles.themeItem}>
+          <TouchableNativeFeedback onPress={() => this._onThemeSelected(null)}>
+            <View style={[styles.themeItem, !this.state.themeSelectedTheme && styles.activeItem]}>
               <Image source={require('./images/ic_menu_home.png')} />
-              <Text style = {[styles.itemName, {marginLeft:10}]}>首页</Text>
+              <Text style = {[styles.itemName, {color: '#00a2ed'}]}>首页</Text>
             </View>
           </TouchableNativeFeedback>
         </View>

@@ -12,6 +12,7 @@ var API_URL_THEME_LIST = API_URL_PREFIX+'/themes';
 
 var KEY_START_IMAGE = '@START_IMAGE';
 var KEY_THEME_LIST = '@THEME_LIST';
+var KEY_THEME_LIST_SUBSCRIBED = '@THEME_LIST_SUBSCRIBED';
 
 var ZhihuApi = function () {
   if(typeof ZhihuApi.instance !== 'object') {
@@ -74,6 +75,34 @@ ZhihuApi.prototype.getThemeList = function() {
       })
       .done();
   });
+};
+
+ZhihuApi.prototype.getSubscibeThemes = function () {
+  return this._getItem(KEY_THEME_LIST_SUBSCRIBED);
+};
+
+ZhihuApi.prototype.subscibeTheme = function (tid) {
+  if(!tid) return false;
+  this.getSubscibeThemes().then((themes) => {
+    themes = themes || [];
+    if(themes.indexOf(tid) !== -1) return false;
+    themes.push(tid);
+    AsyncStorage.setItem(KEY_THEME_LIST_SUBSCRIBED, JSON.stringify(themes));
+  }).done();
+};
+
+ZhihuApi.prototype.unSubscibeTheme = function (tid) {
+  if(!tid) return false;
+  this.getSubscibeThemes().then((themes) => {
+    if(!themes || themes.length === 1 || themes.indexOf(tid) == -1) return false;
+    for(let i=0; i<themes.length; i++) {
+      if(themes.id === tid) {
+        themes.splice(i,1);
+        break;
+      }
+    }
+    AsyncStorage.setItem(KEY_THEME_LIST_SUBSCRIBED, JSON.stringify(themes));
+  }).done();
 };
 
 

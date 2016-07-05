@@ -56,10 +56,12 @@ export default class MainScreen extends Component {
         };
     }
 
-    _renderDrawerView() {
-      return (<DrawerMenu
-
-        />);
+    _renderDrawerView = () => {
+      return (
+        <DrawerMenu
+          onThemeSelected={this._onThemeSelected}
+        />
+      );
     }
 
     componentDidMount() {
@@ -74,6 +76,11 @@ export default class MainScreen extends Component {
       // TODO
     }
 
+    _onThemeSelected = (theme) => {
+      // TODO
+      this.refs[DRAWER_REF].closeDrawer();
+    }
+
     render() {
         return (
           <DrawerLayoutAndroid
@@ -82,7 +89,6 @@ export default class MainScreen extends Component {
             keyboardDismissMode = 'on-drag'
             drawerPosition = {DrawerLayoutAndroid.positions.Left}
             renderNavigationView = {this._renderDrawerView}
-            //drawerLockMode = 'locked-open'
           >
             <ToolbarAndroid
               navIcon = {require('./images/ic_menu_white.png')}
