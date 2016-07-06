@@ -77,31 +77,31 @@ DataRepository.prototype.getThemeList = function() {
   });
 };
 
-DataRepository.prototype.getSubscibeThemes = function () {
+DataRepository.prototype.getSubscribeThemeIDs = function () {
   return this._getItem(KEY_THEME_LIST_SUBSCRIBED);
 };
 
-DataRepository.prototype.subscibeTheme = function (tid) {
+DataRepository.prototype.subscribeTheme = function (tid) {
   if(!tid) return false;
-  this.getSubscibeThemes().then((themes) => {
-    themes = themes || [];
-    if(themes.indexOf(tid) !== -1) return false;
-    themes.push(tid);
-    AsyncStorage.setItem(KEY_THEME_LIST_SUBSCRIBED, JSON.stringify(themes));
+  this.getSubscribeThemeIDs().then((tids) => {
+    tids = tids || [];
+    if(tids.indexOf(tid) !== -1) return false;
+    tids.push(tid);
+    AsyncStorage.setItem(KEY_THEME_LIST_SUBSCRIBED, JSON.stringify(tids));
   }).done();
 };
 
-DataRepository.prototype.unSubscibeTheme = function (tid) {
+DataRepository.prototype.unSubscribeTheme = function (tid) {
   if(!tid) return false;
-  this.getSubscibeThemes().then((themes) => {
-    if(!themes || themes.length === 1 || themes.indexOf(tid) == -1) return false;
-    for(let i=0; i<themes.length; i++) {
-      if(themes.id === tid) {
-        themes.splice(i,1);
+  this.getSubscribeThemeIDs().then((tids) => {
+    if(!tids || tids.length === 0 || tids.indexOf(tid) === -1) return false;
+    for(let i=0; i<tids.length; i++) {
+      if(tids[i] === tid) {
+        tids.splice(i,1);
         break;
       }
     }
-    AsyncStorage.setItem(KEY_THEME_LIST_SUBSCRIBED, JSON.stringify(themes));
+    AsyncStorage.setItem(KEY_THEME_LIST_SUBSCRIBED, JSON.stringify(tids));
   }).done();
 };
 

@@ -99,7 +99,7 @@ export default class DrawerMenu extends Component {
       var subscribed_themes = [];
       var unsubscribed_themes = [];
       var new_themes = [];
-      data_repository.getSubscibeThemes().then((themes_subscribed_ids) => {
+      data_repository.getSubscribeThemeIDs().then((themes_subscribed_ids) => {
         for(let i=0; i<themes.length; i++) {
           themes[i].selected = false;
           if(this.state.themeSelectedTheme && this.state.themeSelectedTheme.id === themes[i].id) {
@@ -130,8 +130,8 @@ export default class DrawerMenu extends Component {
     }
   }
 
-  subscribTheme(tid) {
-    data_repository.subscibeTheme(tid);
+  subscribeTheme(tid) {
+    data_repository.subscribeTheme(tid);
     this._setThemeList();
   }
 
@@ -155,7 +155,7 @@ export default class DrawerMenu extends Component {
     var indicator = theme.subscribed ? (
           <Image style={styles.themeIndicator} source={require('./images/ic_menu_arrow.png')} />
       ) : (
-          <TouchableOpacity onPress={() => this.subscribTheme(theme.id)} style={styles.themeIndicator}>
+          <TouchableOpacity onPress={() => this.subscribeTheme(theme.id)} style={styles.themeIndicator}>
             <Image source={require('./images/ic_menu_follow.png')} />
           </TouchableOpacity>
       );
