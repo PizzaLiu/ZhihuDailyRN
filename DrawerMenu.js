@@ -11,9 +11,9 @@ import {
   TouchableOpacity,
 } from 'react-native'
 
-import ZhihuApi from './ZhihuApi';
+import DataRepository from './DataRepository';
 
-var zhihu_api = new ZhihuApi();
+var data_repository = new DataRepository();
 
 const styles = {
   container: {
@@ -99,7 +99,7 @@ export default class DrawerMenu extends Component {
       var subscribed_themes = [];
       var unsubscribed_themes = [];
       var new_themes = [];
-      zhihu_api.getSubscibeThemes().then((themes_subscribed_ids) => {
+      data_repository.getSubscibeThemes().then((themes_subscribed_ids) => {
         for(let i=0; i<themes.length; i++) {
           themes[i].selected = false;
           if(this.state.themeSelectedTheme && this.state.themeSelectedTheme.id === themes[i].id) {
@@ -121,7 +121,7 @@ export default class DrawerMenu extends Component {
         });
       }).done();
     } else {
-      zhihu_api.getThemeListOffline().then((themes) => {
+      data_repository.getThemeListOffline().then((themes) => {
         if(!themes) throw new Error('cannot get themes in localstrage');
         this._setThemeList(themes);
       }).catch((err) => {
@@ -131,12 +131,12 @@ export default class DrawerMenu extends Component {
   }
 
   subscribTheme(tid) {
-    zhihu_api.subscibeTheme(tid);
+    data_repository.subscibeTheme(tid);
     this._setThemeList();
   }
 
   fetchThemes() {
-    zhihu_api.getThemeList().then((themes) => {
+    data_repository.getThemeList().then((themes) => {
       this._setThemeList(themes);
     }).catch((err) => {
       this.setThemeList();

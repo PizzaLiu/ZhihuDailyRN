@@ -10,9 +10,9 @@ import {
   Animated,
 } from 'react-native';
 
-import ZhihuApi from './ZhihuApi';
+import DataRepository from './DataRepository';
 
-var zhihu_api = new ZhihuApi();
+var data_repository = new DataRepository();
 var WINDOW_WIDTH = Dimensions.get('window').width;
 var WINDOW_HEIGHT = Dimensions.get('window').height;
 
@@ -58,7 +58,7 @@ class SplashScreen extends React.Component {
       };
       this.setState({startImage: startImage});
     } else {
-      zhihu_api.getStartImage()
+      data_repository.getStartImage()
         .then((result) => {
           if (result){
             startImage = {
@@ -73,7 +73,7 @@ class SplashScreen extends React.Component {
         })
         .done();
     }
-    zhihu_api.updateStartImage();
+    data_repository.updateStartImage();
   }
 
   constructor(props) {

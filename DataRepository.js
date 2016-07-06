@@ -14,14 +14,14 @@ var KEY_START_IMAGE = '@START_IMAGE';
 var KEY_THEME_LIST = '@THEME_LIST';
 var KEY_THEME_LIST_SUBSCRIBED = '@THEME_LIST_SUBSCRIBED';
 
-var ZhihuApi = function () {
-  if(typeof ZhihuApi.instance !== 'object') {
-    ZhihuApi.instance = this;
+var DataRepository = function () {
+  if(typeof DataRepository.instance !== 'object') {
+    DataRepository.instance = this;
   }
-  return ZhihuApi.instance;
+  return DataRepository.instance;
 };
 
-ZhihuApi.prototype._getItem = function (key: string) {
+DataRepository.prototype._getItem = function (key: string) {
   return new Promise((resolve, reject) => {
     AsyncStorage.getItem(key, (error, result) => {
       var data = null;
@@ -41,11 +41,11 @@ ZhihuApi.prototype._getItem = function (key: string) {
   });
 };
 
-ZhihuApi.prototype.getStartImage = function() {
+DataRepository.prototype.getStartImage = function() {
   return this._getItem(KEY_START_IMAGE);
 };
 
-ZhihuApi.prototype.updateStartImage = function() {
+DataRepository.prototype.updateStartImage = function() {
   fetch(API_URL_START_IMAGE)
     .then((response) => response.json())
     .then((responseData) => {
@@ -57,11 +57,11 @@ ZhihuApi.prototype.updateStartImage = function() {
     .done();
 };
 
-ZhihuApi.prototype.getThemeListOffline = function() {
+DataRepository.prototype.getThemeListOffline = function() {
   return this._getItem(KEY_THEME_LIST);
 };
 
-ZhihuApi.prototype.getThemeList = function() {
+DataRepository.prototype.getThemeList = function() {
   return new Promise((resolve, reject) => {
     fetch(API_URL_THEME_LIST)
       .then((response) => response.json())
@@ -77,11 +77,11 @@ ZhihuApi.prototype.getThemeList = function() {
   });
 };
 
-ZhihuApi.prototype.getSubscibeThemes = function () {
+DataRepository.prototype.getSubscibeThemes = function () {
   return this._getItem(KEY_THEME_LIST_SUBSCRIBED);
 };
 
-ZhihuApi.prototype.subscibeTheme = function (tid) {
+DataRepository.prototype.subscibeTheme = function (tid) {
   if(!tid) return false;
   this.getSubscibeThemes().then((themes) => {
     themes = themes || [];
@@ -91,7 +91,7 @@ ZhihuApi.prototype.subscibeTheme = function (tid) {
   }).done();
 };
 
-ZhihuApi.prototype.unSubscibeTheme = function (tid) {
+DataRepository.prototype.unSubscibeTheme = function (tid) {
   if(!tid) return false;
   this.getSubscibeThemes().then((themes) => {
     if(!themes || themes.length === 1 || themes.indexOf(tid) == -1) return false;
@@ -106,6 +106,6 @@ ZhihuApi.prototype.unSubscibeTheme = function (tid) {
 };
 
 
-module.exports = ZhihuApi;
+module.exports = DataRepository;
 
 
