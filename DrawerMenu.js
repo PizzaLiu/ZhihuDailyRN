@@ -90,6 +90,10 @@ export default class DrawerMenu extends Component {
       };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(this.props.updateThemeList != nextProps.updateThemeList) this._setThemeList();
+  }
+
   componentDidMount() {
     this.fetchThemes();
   }

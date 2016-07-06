@@ -13,6 +13,9 @@ import {
 } from 'react-native';
 
 import DrawerMenu from './DrawerMenu';
+import DataRepository from './DataRepository';
+
+var data_repository = new DataRepository();
 
 const styles = StyleSheet.create({
   container: {
@@ -50,21 +53,36 @@ export default class MainScreen extends Component {
             toolbarTitle: '首页',
             theme: null,
             actions: [],
+            updateThemeList: new Date(),
         };
+    }
+
+    _unSubscribeTheme = () => {
+      data_repository.unSubscribeTheme(this.state.theme.id).then(() => {
+        this.state.theme.subscribed = false;
+        this.setState({theme: this.state.theme, updateThemeList:new Date()});
+      }).done();
+    }
+
+    _subscribeTheme = () => {
+      data_repository.subscribeTheme(this.state.theme.id).then(() => {
+        this.state.theme.subscribed = true;
+        this.setState({theme: this.state.theme, updateThemeList:new Date()});
+      }).done();
     }
 
     _genToolbarActions = () => {
       var actions = [];
       var toolbar_actions = [
-        {title: '提醒', icon: require('./images/ic_message_white.png'), show: 'always'},
-        {title: '夜间模式', show: 'never'},
-        {title: '设置选项', show: 'never'},
+        {title: '提醒', icon: require('./images/ic_message_white.png'), show: 'always', func: function(){}},
+        {title: '夜间模式', show: 'never', func: function(){}},
+        {title: '设置选项', show: 'never', func: function(){}},
       ];
       var toolbar_actions_follow = [
-        {title: '添加收藏', icon: require('./images/ic_theme_add.png'), show: 'always'},
+        {title: '添加收藏', icon: require('./images/ic_theme_add.png'), show: 'always', func: this._subscribeTheme},
       ];
       var toolbar_actions_del = [
-        {title: '删除收藏', icon: require('./images/ic_theme_remove.png'), show: 'always', pizza: function() {}},
+        {title: '删除收藏', icon: require('./images/ic_theme_remove.png'), show: 'always', func: this._unSubscribeTheme},
       ];
       if(!this.state.theme) {
         actions = toolbar_actions;
@@ -79,6 +97,7 @@ export default class MainScreen extends Component {
       return (
         <DrawerMenu
           onThemeSelected={this._onThemeSelected}
+          updateThemeList={this.state.updateThemeList}
         />
       );
     }
@@ -93,7 +112,7 @@ export default class MainScreen extends Component {
 
     _onActionSelected = (actionOffset) => {
       // TODO
-      console.log(this.state.actions[actionOffset]);
+      this.state.actions[actionOffset].func();
     }
 
     _onThemeSelected = (theme) => {

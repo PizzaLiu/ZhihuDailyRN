@@ -83,17 +83,17 @@ DataRepository.prototype.getSubscribeThemeIDs = function () {
 
 DataRepository.prototype.subscribeTheme = function (tid) {
   if(!tid) return false;
-  this.getSubscribeThemeIDs().then((tids) => {
+  return this.getSubscribeThemeIDs().then((tids) => {
     tids = tids || [];
     if(tids.indexOf(tid) !== -1) return false;
     tids.push(tid);
     AsyncStorage.setItem(KEY_THEME_LIST_SUBSCRIBED, JSON.stringify(tids));
-  }).done();
+  });
 };
 
 DataRepository.prototype.unSubscribeTheme = function (tid) {
   if(!tid) return false;
-  this.getSubscribeThemeIDs().then((tids) => {
+  return this.getSubscribeThemeIDs().then((tids) => {
     if(!tids || tids.length === 0 || tids.indexOf(tid) === -1) return false;
     for(let i=0; i<tids.length; i++) {
       if(tids[i] === tid) {
@@ -102,7 +102,7 @@ DataRepository.prototype.unSubscribeTheme = function (tid) {
       }
     }
     AsyncStorage.setItem(KEY_THEME_LIST_SUBSCRIBED, JSON.stringify(tids));
-  }).done();
+  });
 };
 
 
