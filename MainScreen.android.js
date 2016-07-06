@@ -102,10 +102,6 @@ export default class MainScreen extends Component {
       );
     }
 
-    componentDidMount() {
-      this.refs[DRAWER_REF].openDrawer();
-    }
-
     _showDrawer = () => {
       this.refs[DRAWER_REF].openDrawer();
     }

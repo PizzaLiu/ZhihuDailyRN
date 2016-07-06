@@ -15,7 +15,7 @@ class ZhihuDailyRN extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        splashed: true,
+        splashed: false,
     };
     this.initialRoute = {
       name: 'MainScreen',
