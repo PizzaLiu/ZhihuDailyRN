@@ -1,18 +1,14 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
+'use strict';
 import React, { Component } from 'react';
 import {
   AppRegistry,
-  StyleSheet,
-  Text,
-  View,
+  Navigator,
+  ToastAndroid,
+  BackAndroid,
 } from 'react-native';
 
 import SplashScreen from './SplashScreen';
+import MainScreen from './MainScreen';
 
 class ZhihuDailyRN extends Component {
 
@@ -21,6 +17,15 @@ class ZhihuDailyRN extends Component {
     this.state = {
         splashed: false,
     };
+    this.initialRoute = {
+      name: 'MainScreen',
+      component: MainScreen,
+      params: {}
+    };
+  }
+
+  componentWillMount() {
+    BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
   }
 
   componentDidMount() {
@@ -34,42 +39,32 @@ class ZhihuDailyRN extends Component {
 
   componentWillUnmount() {
     this.timer && clearTimeout(this.timer);
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
   }
 
   render() {
     return this.state.splashed ? (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Shake or press menu button for dev menu
-        </Text>
-      </View>
+      <Navigator
+        configureScene = { (route, routeStack) => Navigator.SceneConfigs.VerticalDownSwipeJump }
+        initialRoute = {this.initialRoute}
+        renderScene = {(route, navigator) => {
+            let Component = route.component;
+            return <Component {...route.params} navigator={navigator} /> 
+          }
+        }
+      />
     ) : (<SplashScreen />);
   }
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+  onBackAndroid = () => {
+      if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
+        return false;
+      }
+      this.lastBackPressed = Date.now();
+      ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+      return true;
+  };
+
+}
 
 AppRegistry.registerComponent('ZhihuDailyRN', () => ZhihuDailyRN);
